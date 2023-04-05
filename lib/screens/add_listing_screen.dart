@@ -132,8 +132,11 @@ class _AddListingScreenState extends State<AddListingScreen> {
           _isUploading = false;
         });
         // Handle success
+        Navigator.pop(context);
+
       } catch (e) {
         print('Error adding listing: $e');
+        
         setState(() {
           _isUploading = false;
         });
@@ -147,16 +150,17 @@ class _AddListingScreenState extends State<AddListingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Listing'),
+        title: const Text('Add Listing'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+              children: <Widget>[
+                // Image box
                 GestureDetector(
                   onTap: () => _showImageSourceDialog(),
                   child: Container(
@@ -180,7 +184,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Title'),
+                  decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
                   validator: (value) {
                     if (value==null) {
                       return 'Please enter a title';
@@ -191,7 +195,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Description'),
+                  decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
                   validator: (value) {
                     if (value==null) {
                       return 'Please enter a description';
@@ -211,14 +215,14 @@ class _AddListingScreenState extends State<AddListingScreen> {
                         });
                       },
                     ),
-                    Text('Free'),
+                    const Text('Free'),
                   ],
                 ),
                 ElevatedButton(
                   onPressed: _isUploading ? null : _submitListing,
                   child: _isUploading
-                      ? CircularProgressIndicator()
-                      : Text('Submit Listing'),
+                      ? const CircularProgressIndicator()
+                      : const Text('Submit Listing'),
                 ),
               ],
             ),

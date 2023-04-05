@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_trade_post_app/screens/add_listing_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ListingsScreen extends StatelessWidget {
   const ListingsScreen({super.key});
@@ -18,12 +19,49 @@ class ListingsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: const Center(
-        child: Text('Listings'),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('listings').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          List<QueryDocumentSnapshot> listings = snapshot.data!.docs;
+          return ListView.builder(
+            itemCount: listings.length,
+            itemBuilder: (BuilderContext, int index) {
+              // Extract listing data from snapshot
+              String title = listings[index]['title'];
+              String description = listings[index]['description'];
+              bool isFree = listings[index]['isFree'];
+              String imageUrl = listings[index]['imageUrl'];
+
+              // Return a card widget for each listing
+              return Card(
+                child: ListTile(
+                  leading: Image.network(imageUrl),
+                  title: Text(title),
+                  subtitle: Text(description),
+                  trailing: isFree ? const Text('Free') : const Text('Trade'),
+                  onTap: () {
+                    // Navigate to Listing Details
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => ListingDetailsScreen(listing: listings[index])),
+                    // );
+                  },
+                )
+              );
+            }
+          );
+        }
+
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to Add Listings
+          // Navigate to Add Listings
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddListingScreen()),
