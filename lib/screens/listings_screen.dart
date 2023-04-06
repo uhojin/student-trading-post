@@ -52,6 +52,8 @@ class ListingsScreen extends StatelessWidget {
                         title: title,
                         description: description,
                         imageUrl: imageUrl,
+                        documentId: listings[index].id,
+                        userId: listings[index]['userId'],
                       )),
                     );
                   },

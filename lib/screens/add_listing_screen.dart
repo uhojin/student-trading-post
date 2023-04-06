@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:student_trade_post_app/screens/listings_screen.dart';
 
 
 class AddListingScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
   bool _isFree = true;
   bool _isUploading = false;
 
-  void _showImageSourceDialog() {
+  void _showImageSourceDialog() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -42,7 +43,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 title: const Text('Photo Library'),
                 onTap: () {
                   _chooseImage();
-                  Navigator.of(context).pop();
+                  if (_imageFile != null) {
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
               ListTile(
@@ -50,7 +53,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 title: const Text('Camera'),
                 onTap: () {
                   _takeImage();
-                  Navigator.of(context).pop();
+                  if (_imageFile != null) {
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
             ],
@@ -132,11 +137,15 @@ class _AddListingScreenState extends State<AddListingScreen> {
           _isUploading = false;
         });
         // Handle success
-        Navigator.pop(context);
+
+        await Future.delayed(const Duration(seconds: 1));
+        if (!context.mounted) return;
+        Navigator.of(context).pop();
+        // Navigator.pop(context);
 
       } catch (e) {
         print('Error adding listing: $e');
-        
+
         setState(() {
           _isUploading = false;
         });
@@ -172,7 +181,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     ),
                     child: _imageFile == null
                         ? Icon(
-                      Icons.camera_alt,
+                      Icons.add_a_photo,
                       size: 72,
                       color: Colors.grey[800],
                     )
@@ -182,7 +191,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
                   validator: (value) {
@@ -193,7 +202,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   },
                   onSaved: (value) => _title = value!,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
                   validator: (value) {
@@ -204,7 +213,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   },
                   onSaved: (value) => _description = value!,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Row(
                   children: [
                     Checkbox(
@@ -223,6 +232,12 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   child: _isUploading
                       ? const CircularProgressIndicator()
                       : const Text('Submit Listing'),
+                  style: ElevatedButton.styleFrom(
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(16.0),
+                   ),
+                    padding: const EdgeInsets.all(16.0),
+                  )
                 ),
               ],
             ),
