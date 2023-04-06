@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_trade_post_app/screens/add_listing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:student_trade_post_app/screens/listing_details_screen.dart';
 
 class ListingsScreen extends StatelessWidget {
   const ListingsScreen({super.key});
@@ -11,13 +12,11 @@ class ListingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Listings',
         style: TextStyle(
-          color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 36,
         ),
       ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('listings').snapshots(),
@@ -47,10 +46,14 @@ class ListingsScreen extends StatelessWidget {
                   trailing: isFree ? const Text('Free') : const Text('Trade'),
                   onTap: () {
                     // Navigate to Listing Details
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => ListingDetailsScreen(listing: listings[index])),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ListingDetailsScreen(
+                        title: title,
+                        description: description,
+                        imageUrl: imageUrl,
+                      )),
+                    );
                   },
                 )
               );
