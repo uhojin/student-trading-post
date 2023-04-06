@@ -39,26 +39,77 @@ class ListingsScreen extends StatelessWidget {
 
               // Return a card widget for each listing
               return Card(
-                child: ListTile(
-                  leading: Image.network(imageUrl),
-                  title: Text(title),
-                  subtitle: Text(description),
-                  trailing: isFree ? const Text('Free') : const Text('Trade'),
+                child: InkWell(
                   onTap: () {
-                    // Navigate to Listing Details
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ListingDetailsScreen(
-                        title: title,
-                        description: description,
-                        imageUrl: imageUrl,
-                        documentId: listings[index].id,
-                        userId: listings[index]['userId'],
-                      )),
+                      MaterialPageRoute(
+                        builder: (context) => ListingDetailsScreen(
+                          title: title,
+                          description: description,
+                          imageUrl: imageUrl,
+                          documentId: listings[index].id,
+                          userId: listings[index]['userId'],
+                        ),
+                      ),
                     );
                   },
-                )
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 8.0),
+                            isFree
+                                ? Text(
+                              'Free',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                                : Text(
+                              'Trade',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               );
+
             }
           );
         }
