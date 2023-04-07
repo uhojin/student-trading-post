@@ -86,6 +86,21 @@ class ListingsScreen extends StatelessWidget {
                                 style: const TextStyle(fontSize: 18.0),
                                 // overflow: TextOverflow.ellipsis,
                               ),
+                              isFree
+                                                    ? const Text(
+                                                  'Free',
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )
+                                                    : const Text(
+                                                  'Trade',
+                                                  style: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                             ],
                           ),
                         ),
@@ -96,6 +111,7 @@ class ListingsScreen extends StatelessWidget {
               );
 
             }, cardsCount: listings.length,);
+
           }
 
       ),
