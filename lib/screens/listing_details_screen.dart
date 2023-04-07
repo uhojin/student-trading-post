@@ -101,7 +101,7 @@ class ListingDetailsScreen extends StatelessWidget {
                 if (isCurrentUserListingOwner)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         // Delete the listing
                         FirebaseFirestore.instance
@@ -111,13 +111,14 @@ class ListingDetailsScreen extends StatelessWidget {
                             .then((value) => Navigator.pop(context))
                             .catchError((error) => print('Error deleting listing: $error'));
                       },
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Delete Listing'),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                         ),
-                      child: const Text('Delete Listing')
                     ),
                   ),
               ],

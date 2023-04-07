@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  appinio_swiper:
+    dependency: "direct main"
+    description:
+      name: appinio_swiper
+      sha256: "97a99c650dc5c74a31c93474260237244bdd4b79fce9244e3ab1fbe23d6676be"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   async:
     dependency: transitive
     description:
@@ -357,14 +365,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  swipe_cards:
-    dependency: "direct main"
-    description:
-      name: swipe_cards
-      sha256: c34f28e71e3d4041455aaff49ac4242a79cad0e7d0ec16978f871059f3d956e3
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0+1"
   term_glyph:
     dependency: transitive
     description:
