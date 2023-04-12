@@ -1,16 +1,23 @@
-# student_trade_post_app
+# Student Trade Post
 
 Final Project for PROG20261 Winter 2023
 
-## Getting Started
+Students trading items for free or for another item of equal value.
 
-This project is a starting point for a Flutter application.
+## Progress
 
-A few resources to get you started if this is your first Flutter project:
+|Feature	| Status|
+|---------|-------|
+|Listings	| [ ] Not Started / [ ] In Progress / [🟡] Complete|
+|Swipe Cards| [🟡] Not Started / [ ] In Progress / [ ] Complete|
+|Chat List 	| [ ] Not Started / [🟡] In Progress / [ ] Complete|
+|Chat | [ ] Not Started / [🟡] In Progress / [ ] Complete|
+|Reporting| [🟡] Not Started / [ ] In Progress / [ ] Complete|
+|Favorites| [🟡] Not Started / [ ] In Progress / [ ] Complete|
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+❌ 🟡 🟢
+
+
+
