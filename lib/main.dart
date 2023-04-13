@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_trade_post_app/screens/Chat.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:student_trade_post_app/screens/chatList.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -38,7 +39,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       'Index 0: Home',
       style: optionStyle,
     ),
-    Chat(),
+    ChatList()
 
   ];
 

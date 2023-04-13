@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key}) : super(key: key);
+  final String otherId;
+
+  const Chat({Key? key, required this.otherId}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
 }
+
+
 
 class _ChatState extends State<Chat> {
   late String _userId;
@@ -33,7 +37,7 @@ class _ChatState extends State<Chat> {
       await _messagesCollection.add({
         'content': content,
         'idFrom': _userId,
-        'idTo': 'aaa', //otherUserID goes here too
+        'idTo': widget.otherId,
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
       _textEditingController.clear();
@@ -65,9 +69,8 @@ class _ChatState extends State<Chat> {
 
                       final List<QueryDocumentSnapshot> messages = snapshot.data!.docs
                           .where((doc) =>
-                      //UPDATE THE aaa TO USER ID OF POST
-                      (doc['idTo'] == _userId && doc['idFrom'] == "aaa") ||
-                          (doc['idTo'] == "aaa" && doc['idFrom'] == _userId))
+                      (doc['idTo'] == _userId && doc['idFrom'] == widget.otherId) ||
+                          (doc['idTo'] == widget.otherId && doc['idFrom'] == _userId))
                           .toList();
 
                       return ListView.builder(
