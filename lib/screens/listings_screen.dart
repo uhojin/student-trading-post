@@ -52,7 +52,7 @@ class ListingsScreen extends StatelessWidget {
                         builder: (context) => ListingDetailsScreen(
                           title: title,
                           description: description,
-                          imageUrl: imageUrls[0],
+                          imageUrls: listings[index]['imageUrls'],
                           documentId: listings[index].id,
                           userId: listings[index]['userId'],
                         ),

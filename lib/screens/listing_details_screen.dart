@@ -1,23 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:student_trade_post_app/screens/Chat.dart';
 
 
-class ListingDetailsScreen extends StatelessWidget {
+class ListingDetailsScreen extends StatefulWidget {
   final String title;
   final String description;
-  final String imageUrl;
+  final List<dynamic> imageUrls;
   final String documentId;
   final String userId;
 
-  ListingDetailsScreen({
+  const ListingDetailsScreen({
+    Key? key,
     required this.title,
     required this.description,
-    required this.imageUrl,
+    required this.imageUrls,
     required this.documentId,
     required this.userId,
-  });
+  }) : super (key: key);
+
+  @override
+  _ListingDetailsScreenState createState() => _ListingDetailsScreenState();
+}
+
+class _ListingDetailsScreenState extends State<ListingDetailsScreen> with SingleTickerProviderStateMixin {
+
+  late int currentIndex;
+  late String userId;
+  late String title;
+  late String description;
+  late List<dynamic> imageUrls;
+  late String documentId;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = 0;
+    userId = widget.userId;
+    title = widget.title;
+    description = widget.description;
+    imageUrls = widget.imageUrls;
+    documentId = widget.documentId;
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +57,25 @@ class ListingDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
+            SizedBox(
+              // height: 300.0, // set the height of the image container
+              height: MediaQuery.of(context).size.height * 0.5, // set height to 50% of device screen height
+
+              child: PageView.builder(
+                itemCount: imageUrls.length,
+                controller: PageController(initialPage: currentIndex),
+                onPageChanged: (index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Image.network(
+                    imageUrls[index],
+                    fit: BoxFit.fitHeight,
+                  );
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
