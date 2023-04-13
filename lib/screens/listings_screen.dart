@@ -37,82 +37,84 @@ class ListingsScreen extends StatelessWidget {
             }
             List<QueryDocumentSnapshot> listings = snapshot.data!.docs;
 
-            return AppinioSwiper(loop: true, cardsBuilder: (BuildContext context, int index) {
-// Extract listing data from snapshot
-              String title = listings[index]['title'];
-              String description = listings[index]['description'];
-              bool isFree = listings[index]['isFree'];
-              String imageUrl = listings[index]['imageUrl'];
+            return AppinioSwiper(
+              loop: true,
+              cardsBuilder: (BuildContext context, int index) {
+                // Extract listing data from snapshot
+                String title = listings[index]['title'];
+                String description = listings[index]['description'];
+                bool isFree = listings[index]['isFree'];
+                List<dynamic> imageUrls = listings[index]['imageUrls'];
 
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListingDetailsScreen(
-                        title: title,
-                        description: description,
-                        imageUrl: imageUrl,
-                        documentId: listings[index].id,
-                        userId: listings[index]['userId'],
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ListingDetailsScreen(
+                          title: title,
+                          description: description,
+                          imageUrl: imageUrls[0],
+                          documentId: listings[index].id,
+                          userId: listings[index]['userId'],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Card(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Image.network(
+                              imageUrls[0],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  style: const TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 16.0),
+                                Text(
+                                  description,
+                                  style: const TextStyle(fontSize: 18.0),
+                                  // overflow: TextOverflow.ellipsis,
+                                ),
+                                isFree
+                                    ? const Text(
+                                  'Free',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                                    : const Text(
+                                  'Trade',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Padding(padding: const EdgeInsets.all(8),
-                          child: Image.network(
-                            listings[index]['imageUrl'],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                listings[index]['title'],
-                                style: const TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 16.0),
-                              Text(
-                                listings[index]['description'],
-                                style: const TextStyle(fontSize: 18.0),
-                                // overflow: TextOverflow.ellipsis,
-                              ),
-                              isFree
-                                                    ? const Text(
-                                                  'Free',
-                                                  style: TextStyle(
-                                                    color: Colors.green,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )
-                                                    : const Text(
-                                                  'Trade',
-                                                  style: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-              );
-
-            }, cardsCount: listings.length,);
+                );
+              }, cardsCount: listings.length,);
 
           }
 
