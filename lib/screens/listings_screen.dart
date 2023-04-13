@@ -4,6 +4,7 @@ import 'package:student_trade_post_app/screens/add_listing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:student_trade_post_app/screens/listing_details_screen.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:intl/intl.dart';
 
 
 class ListingsScreen extends StatelessWidget {
@@ -55,6 +56,7 @@ class ListingsScreen extends StatelessWidget {
                           imageUrls: listings[index]['imageUrls'],
                           documentId: listings[index].id,
                           userId: listings[index]['userId'],
+                          isFree: listings[index]['isFree'],
                         ),
                       ),
                     );
@@ -79,15 +81,10 @@ class ListingsScreen extends StatelessWidget {
                                 Text(
                                   title,
                                   style: const TextStyle(
+
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                                const SizedBox(height: 16.0),
-                                Text(
-                                  description,
-                                  style: const TextStyle(fontSize: 18.0),
-                                  // overflow: TextOverflow.ellipsis,
                                 ),
                                 isFree
                                     ? const Text(
@@ -103,6 +100,12 @@ class ListingsScreen extends StatelessWidget {
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                ),
+                                const SizedBox(height: 16.0),
+                                Text(
+                                  description,
+                                  style: const TextStyle(fontSize: 18.0),
+                                  // overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:student_trade_post_app/screens/Chat.dart';
-
+import 'package:intl/intl.dart';
 
 class ListingDetailsScreen extends StatefulWidget {
   final String title;
@@ -11,6 +11,7 @@ class ListingDetailsScreen extends StatefulWidget {
   final List<dynamic> imageUrls;
   final String documentId;
   final String userId;
+  final bool isFree;
 
   const ListingDetailsScreen({
     Key? key,
@@ -19,6 +20,7 @@ class ListingDetailsScreen extends StatefulWidget {
     required this.imageUrls,
     required this.documentId,
     required this.userId,
+    required this.isFree,
   }) : super (key: key);
 
   @override
@@ -33,6 +35,7 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
   late String description;
   late List<dynamic> imageUrls;
   late String documentId;
+  late bool isFree;
 
   @override
   void initState() {
@@ -43,8 +46,11 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
     description = widget.description;
     imageUrls = widget.imageUrls;
     documentId = widget.documentId;
+    isFree = widget.isFree;
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +92,21 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
                     title,
                     style: const TextStyle(
                       fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  isFree
+                      ? const Text(
+                    'Free',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                      : const Text(
+                    'Trade',
+                    style: TextStyle(
+                      color: Colors.blue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

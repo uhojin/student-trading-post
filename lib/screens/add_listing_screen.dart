@@ -149,84 +149,6 @@ class _AddListingScreenState extends State<AddListingScreen> {
     }
   }
 
-  // void _submitListing() async {
-  //   if (_formKey.currentState != null &&
-  //       _formKey.currentState!.validate() &&
-  //       _imageFiles.isNotEmpty) {
-  //     _formKey.currentState!.save();
-  //
-  //     setState(() {
-  //       _isUploading = true;
-  //     });
-  //
-  //     // Upload image files to Firebase Storage
-  //     List<String> imageDownloadUrls = [];
-  //     try {
-  //       for (var i = 0; i < _imageFiles.length; i++) {
-  //         String fileName = '${DateTime.now().millisecondsSinceEpoch}_$i'; // Add index to the filename to avoid duplicates
-  //         Reference storageReference = FirebaseStorage.instance
-  //             .ref()
-  //             .child('listing_images/$fileName');
-  //         UploadTask uploadTask = storageReference.putFile(_imageFiles[i]);
-  //         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-  //         String imageDownloadUrl = await taskSnapshot.ref.getDownloadURL();
-  //         imageDownloadUrls.add(imageDownloadUrl);
-  //       }
-  //     } catch (e) {
-  //       print('Error uploading images: $e');
-  //       setState(() {
-  //         _isUploading = false;
-  //       });
-  //       return;
-  //     }
-  //
-  //     // Create a new document in the 'listings' collection in Cloud Firestore
-  //     try {
-  //       CollectionReference listingsCollection = FirebaseFirestore.instance
-  //           .collection('listings');
-  //       String userId = FirebaseAuth.instance.currentUser!.uid; // Get current user ID
-  //       await listingsCollection.add({
-  //         'userId': userId, // Include user ID in the document
-  //         'title': _title,
-  //         'description': _description,
-  //         'isFree': _isFree,
-  //         'imageUrls': imageDownloadUrls,
-  //         'timestamp': FieldValue.serverTimestamp(),
-  //       });
-  //       print('Listing added successfully');
-  //       setState(() {
-  //         _isUploading = false;
-  //       });
-  //       // Handle success
-  //
-  //       await Future.delayed(const Duration(seconds: 1));
-  //       if (!context.mounted) return;
-  //       Navigator.of(context as BuildContext).pop();
-  //     } catch (e) {
-  //       print('Error adding listing: $e');
-  //
-  //       setState(() {
-  //         _isUploading = false;
-  //       });
-  //       // Handle error adding listing
-  //     }
-  //   }
-  // }
-
-  Future<List<String>> _uploadImagesToStorage() async {
-    List<String> imageUrls = [];
-    FirebaseStorage storage = FirebaseStorage.instance;
-    for (var imageFile in _imageFiles) {
-      String fileName = path.basename(imageFile.path);
-      Reference ref = storage.ref().child('images/$fileName');
-      UploadTask uploadTask = ref.putFile(imageFile);
-      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-      String imageUrl = await taskSnapshot.ref.getDownloadURL();
-      imageUrls.add(imageUrl);
-    }
-    return imageUrls;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,24 +163,68 @@ class _AddListingScreenState extends State<AddListingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Title',
-                    border: OutlineInputBorder(),
+                // const SizedBox(height: 16),
+                // const Text('Upload Images'),
+                // const SizedBox(height: 8),
+
+
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                  Expanded(child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a title';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _title = value!;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _title = value!;
-                  },
-                ),
-                SizedBox(height: 16),
+                  ),
+                    const SizedBox(width: 16),
+                    ToggleButtons(
+                      isSelected: [_isFree, !_isFree],
+                      selectedColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey,
+                      selectedBorderColor: Colors.blue,
+                      onPressed: (int index) {
+                        setState(() {
+                          _isFree = index == 0;
+                        });
+                      },
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            'Free',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            'Trade',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],),
+
+
+
+
+                const SizedBox(height: 16),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Description',
                     border: OutlineInputBorder(),
                   ),
@@ -272,49 +238,61 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     _description = value!;
                   },
                 ),
-                SizedBox(height: 16),
-                Text('Price'),
+                const SizedBox(height: 16),
+                // const Text('Give it away or trade it'),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                   children: [
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text('Free'),
-                        value: true,
-                        groupValue: _isFree,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isFree = value!;
-                          });
+                    ElevatedButton.icon(
+                        onPressed: () {
+                          _showImageSourceDialog();
                         },
-                      ),
+
+                        icon: const Icon(Icons.add_a_photo),
+                        label: const Text('Add a Photo'),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                        )
                     ),
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text('Paid'),
-                        value: false,
-                        groupValue: _isFree,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isFree = value!;
-                          });
-                        },
-                      ),
+
+                    ElevatedButton.icon(
+                      onPressed: _submitListing,
+                      icon: _isUploading
+                          ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                          : Icon(Icons.add),
+                      label: Text('Add Listing'),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                        )
                     ),
+
+
+
                   ],
                 ),
-                SizedBox(height: 16),
-                Text('Upload Images'),
-                SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    _showImageSourceDialog();
-                  },
-                  child: Text('Choose Images'),
-                ),
-                SizedBox(height: 8),
+
+
+
+                // const SizedBox(height: 8),
+
+                const SizedBox(height: 16),
+
                 _imageFiles.isNotEmpty
                     ? GridView.count(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 3,
                   children: _imageFiles.map((imageFile) {
@@ -325,7 +303,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                           top: 0,
                           right: 0,
                           child: IconButton(
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                             onPressed: () {
                               setState(() {
                                 _imageFiles.remove(imageFile);
@@ -338,19 +316,6 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   }).toList(),
                 )
                     : Container(),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _submitListing,
-                  child: _isUploading
-                      ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  )
-                      : Text('Add Listing'),
-                ),
               ],
             ),
           ),
@@ -358,99 +323,5 @@ class _AddListingScreenState extends State<AddListingScreen> {
       ),
     );
   }
-
-
-// @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: const Text('Add Listing'),
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.stretch,
-  //           children: [
-  //             ElevatedButton.icon(
-  //               onPressed: _showImageSourceDialog,
-  //               icon: const Icon(Icons.camera_alt),
-  //               label: const Text('Add Image'),
-  //             ),
-  //             SizedBox(height: 16.0),
-  //             GridView.count(
-  //               crossAxisCount: 3,
-  //               shrinkWrap: true,
-  //               physics: const NeverScrollableScrollPhysics(),
-  //               children: _imageFiles
-  //                   .map(
-  //                     (image) => Stack(
-  //                   children: [
-  //                     Image.network(
-  //                       image as String,
-  //                       fit: BoxFit.cover,
-  //                       height: 100.0,
-  //                     ),
-  //                     Positioned(
-  //                       top: 0.0,
-  //                       right: 0.0,
-  //                       child: IconButton(
-  //                         icon: const Icon(Icons.close),
-  //                         onPressed: () => setState(() => _imageFiles.remove(image)),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               )
-  //                   .toList(),
-  //             ),
-  //             SizedBox(height: 16.0),
-  //             TextFormField(
-  //               decoration: InputDecoration(
-  //                 labelText: 'Title',
-  //                 border: OutlineInputBorder(),
-  //               ),
-  //               validator: (value) {
-  //                 if (value == null || value.isEmpty) {
-  //                   return 'Please enter a title';
-  //                 }
-  //                 return null;
-  //               },
-  //               onChanged: (value) => setState(() => _title = value),
-  //             ),
-  //             SizedBox(height: 16.0),
-  //             TextFormField(
-  //               maxLines: null,
-  //               decoration: InputDecoration(
-  //                 labelText: 'Description',
-  //                 border: OutlineInputBorder(),
-  //               ),
-  //               validator: (value) {
-  //                 if (value == null || value.isEmpty) {
-  //                   return 'Please enter a description';
-  //                 }
-  //                 return null;
-  //               },
-  //               onChanged: (value) => setState(() => _description = value),
-  //             ),
-  //             SizedBox(height: 16.0),
-  //             CheckboxListTile(
-  //               title: const Text('Is Free'),
-  //               value: _isFree,
-  //               onChanged: (value) => setState(() => _isFree = value ?? false),
-  //             ),
-  //             SizedBox(height: 16.0),
-  //             ElevatedButton(
-  //               onPressed: _submitListing,
-  //               child: const Text('Add Listing'),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-
 }
 
