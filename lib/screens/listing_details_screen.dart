@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:student_trade_post_app/screens/Chat.dart';
+
 
 class ListingDetailsScreen extends StatelessWidget {
   final String title;
@@ -55,19 +57,24 @@ class ListingDetailsScreen extends StatelessWidget {
             ButtonBar(
               alignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Handle contact seller button tap
-                  },
-                  icon: const Icon(Icons.message),
-                  label: const Text('Chat'),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+                if (!isCurrentUserListingOwner)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ElevatedButton.icon(
+                        onPressed: () {
+                          // Handle contact seller button tap
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(otherId: userId)));
+                        },
+                        icon: const Icon(Icons.message),
+                        label: const Text('Chat'),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                        )
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                  )
-                ),
+                  ),
                 const SizedBox(height: 16.0,),
                 ElevatedButton.icon(
                   onPressed: () {

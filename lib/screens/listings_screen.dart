@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:student_trade_post_app/screens/listing_details_screen.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 
-// import 'add_listing_screen_original.dart';
-
 
 class ListingsScreen extends StatelessWidget {
   const ListingsScreen({super.key});
