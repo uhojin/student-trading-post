@@ -33,7 +33,7 @@ class _ChatState extends State<Chat> {
       await _messagesCollection.add({
         'content': content,
         'idFrom': _userId,
-        'idTo': '',
+        'idTo': 'aaa', //otherUserID goes here too
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
       _textEditingController.clear();
@@ -43,9 +43,6 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat App'),
-      ),
       body: FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
@@ -73,16 +70,25 @@ class _ChatState extends State<Chat> {
                           (doc['idTo'] == "aaa" && doc['idFrom'] == _userId))
                           .toList();
 
-                      return Expanded(
-                          child: ListView.builder(
-                          itemCount: messages.length,
-                          itemBuilder: (BuildContext context, int index) {
-                        final message = messages[index];
-                        return ListTile(
-                          title: Text(message['content']),
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final message = messages[index];
+                          final isSentToMe = message['idTo'] == _userId;
+
+                          return Align(
+                            alignment: isSentToMe ? Alignment.centerLeft : Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSentToMe ? Colors.green[100] : Colors.blue[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(message['content']),
+                            ),
                           );
                         },
-                          ),
                       );
                     },
                   ),
