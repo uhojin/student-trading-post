@@ -38,7 +38,7 @@ class _ChatState extends State<Chat> {
         'content': content,
         'idFrom': _userId,
         'idTo': widget.otherId,
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        'timestamp': FieldValue.serverTimestamp(),
       });
       _textEditingController.clear();
     }
