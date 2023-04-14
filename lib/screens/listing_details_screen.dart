@@ -206,6 +206,12 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
     },
     icon: _isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
     label: Text(_isFavorite ? 'Remove from Favorites' : 'Add to Favorites'),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+        )
     )
 ,
 
