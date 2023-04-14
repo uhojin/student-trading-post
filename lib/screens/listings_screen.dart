@@ -1,14 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:student_trade_post_app/screens/add_listing_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:student_trade_post_app/screens/listing_details_screen.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:intl/intl.dart';
 
+import 'package:student_trade_post_app/screens/listing_details_screen.dart';
+import 'package:student_trade_post_app/screens/add_listing_screen.dart';
+import 'package:student_trade_post_app/screens/chatList.dart';
+import 'package:student_trade_post_app/screens/favourites_screen.dart';
 
-class ListingsScreen extends StatelessWidget {
+class ListingsScreen extends StatefulWidget {
   const ListingsScreen({super.key});
+
+  @override
+  _ListingsScreenState createState() => _ListingsScreenState();
+}
+
+class _ListingsScreenState extends State<ListingsScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _tabs = [    const ListingsScreen(),    const ChatList(),    const FavouritesScreen(),  ];
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,18 +80,24 @@ class ListingsScreen extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     child: Card(
+
                       child: Column(
+
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Image.network(
-                              imageUrls[0],
-                              fit: BoxFit.cover,
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.5, // Set a minimum height
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Image.network(
+                                imageUrls[0],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
