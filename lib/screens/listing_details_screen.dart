@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:student_trade_post_app/screens/Chat.dart';
-import 'package:intl/intl.dart';
 
 class ListingDetailsScreen extends StatefulWidget {
+
+
+
   final String title;
   final String description;
   final List<dynamic> imageUrls;
@@ -28,6 +29,9 @@ class ListingDetailsScreen extends StatefulWidget {
 }
 
 class _ListingDetailsScreenState extends State<ListingDetailsScreen> with SingleTickerProviderStateMixin {
+  bool _isFavorite= false;
+
+
 
   late int currentIndex;
   late String userId;
@@ -47,11 +51,46 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
     imageUrls = widget.imageUrls;
     documentId = widget.documentId;
     isFree = widget.isFree;
-
+    _checkFavoriteStatus();
   }
 
+  void _checkFavoriteStatus() async {
+    DocumentSnapshot favoriteSnapshot = await FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(widget.userId)
+        .collection('listings')
+        .doc(widget.documentId)
+        .get();
+    setState(() {
+      _isFavorite = favoriteSnapshot.exists;
+    });
+  }
 
+  void _addToFavorites() {
+    FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(widget.userId)
+        .collection('listings')
+        .doc(widget.documentId)
+        .set({
+      'addedAt': DateTime.now(),
+    });
+    setState(() {
+      _isFavorite = true;
+    });
+  }
 
+  void _removeFromFavorites() {
+    FirebaseFirestore.instance
+        .collection('favorites')
+        .doc(widget.userId)
+        .collection('listings')
+        .doc(widget.documentId)
+        .delete();
+    setState(() {
+      _isFavorite = false;
+    });
+  }
 
 
   @override
@@ -157,19 +196,20 @@ class _ListingDetailsScreenState extends State<ListingDetailsScreen> with Single
                 ),
                 const SizedBox(height: 16.0,),
 
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Handle favourite button tap
-                  },
-                  icon: const Icon(Icons.favorite_border),
-                  label: const Text('Favourite'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                    )
-                ),
+    ElevatedButton.icon(
+    onPressed: () {
+    if (_isFavorite) {
+    _removeFromFavorites();
+    } else {
+    _addToFavorites();
+    }
+    },
+    icon: _isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+    label: Text(_isFavorite ? 'Remove from Favorites' : 'Add to Favorites'),
+    )
+,
+
+
                 const SizedBox(height: 16.0,),
                 if (isCurrentUserListingOwner)
                   Padding(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
@@ -31,8 +32,15 @@ class _ListingsScreenState extends State<ListingsScreen> {
       appBar: AppBar(
         // leading: const Icon(Icons.menu),
 
-        title: const Text('Listings',
-          style: TextStyle(
+
+        title: Text(
+          // 'Listings',
+          _currentIndex == 0
+            ? 'Listings'
+          : _currentIndex == 1
+            ? 'Chat'
+          : 'Favourites',
+          style: const TextStyle(
             // fontWeight: FontWeight.bold,
             // fontSize: 36,
           ),
@@ -139,7 +147,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
                   },
                   cardsCount: listings.length),
               const ChatList(),
-              const FavouritesScreen(),
+              FavoritesScreen(userId: FirebaseAuth.instance.currentUser!.uid,),
             ],
           );
         },
@@ -170,7 +178,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: 'Favorites',
+            label: 'Favourites',
           ),
         ],
       ),
