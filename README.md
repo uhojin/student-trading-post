@@ -4,6 +4,8 @@ Final Project for PROG20261 Winter 2023
 
 Students give away items for free or trade for another item of equal value using a swipe card UI.
 
+Flutter Hybrid App using Firebase as cloud backend database for persistency.
+
 ## Progress
 
 |Feature	| Status|
